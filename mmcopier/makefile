@@ -20,17 +20,12 @@ all: $(TARGET)
 # Link object files into executable
 $(TARGET): $(OBJS)
 	@mkdir -p $(@D)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ $(LIBS)
 
 # Compile source files into object files
 $(OBJDIR)/%.o: src/%.c $(HDRS)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@ 
-
-# Compile test files into object files
-$(OBJDIR)/%.o: test/%.c $(HDRS)
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@ -I src/
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 # Define clean target to remove object files and executable
 clean:
