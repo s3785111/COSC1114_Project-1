@@ -7,6 +7,7 @@
 #ifndef _MMCOPIER_H
 #define _MMCOPIER_H
 
+#define _XOPEN_SOURCE 700
 #include "dirent.h"
 #include "pthread.h"
 #include "stdint.h"

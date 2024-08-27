@@ -8,14 +8,14 @@ SUBPROJECTS = mmcopier
 .PHONY: all test clean
 
 all:
-  @mkdir -p $(BIN)
-  @for proj in $(SUBPROJECTS); do                                 \
+	@mkdir -p $(BIN)
+	@for proj in $(SUBPROJECTS); do                                 \
     make -C $$proj CC="$(CC)" CFLAGS="$(CFLAGS)" LIBS="$(LIBS)";  \
     ln -rsf $$proj/$(BIN)/$$proj $(BIN)/$$proj;                   \
   done;
 
 clean: $(patsubst %,clean-%,$(SUBPROJECTS))
-  rm -rf $(BIN)
+	rm -rf $(BIN)
 
 clean-%:
-  @$(MAKE) -C $* clean
+	@$(MAKE) -C $* clean
