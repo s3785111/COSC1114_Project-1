@@ -1,7 +1,6 @@
 /***********************************************************************************
  * @file        mmcopier.h                                                         *
  * @author      Matt Ricci                                                         *
- * @brief                                                                          *
  ***********************************************************************************/
 
 #ifndef _MMCOPIER_H
@@ -9,21 +8,26 @@
 
 #define _XOPEN_SOURCE 700
 #include "dirent.h"
+#include "pathcat.h"
 #include "pthread.h"
 #include "stdint.h"
 #include "stdio.h"
 #include "string.h"
 #include "unistd.h"
 
-#define ARGC   4
-#define SIZE_N 10
+#define ARGC         4
+#define SIZE_N       10
+#define MAX_FILENAME 50
 
 typedef struct {
-  char fileName[FILENAME_MAX];
+  struct dirent **files;
+  int n;
+  char fileName[MAX_FILENAME];
   char srcDir[FILENAME_MAX];
   char destDir[FILENAME_MAX];
-} mmcopier_args;
+} mmcopier;
 
+int mmcopier_init(mmcopier *, int, char *[]);
 int mmcopier_parse(int, char *[], int *);
 void *mmcopier_copy(void *param);
 

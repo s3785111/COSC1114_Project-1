@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99
+override CFLAGS += -Wall -Wextra -std=c99
 LIBS = -lpthread
 
 BIN = bin
