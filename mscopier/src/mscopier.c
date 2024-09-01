@@ -87,9 +87,10 @@ int mscopier_parse(int argc, char *argv[], int *n) {
 
 /* =============================================================================== */
 /**
- * @brief
+ * @brief Reads a line from the input file into the copier's buffer.
  *
- * @return
+ * @param param Pointer to the mscopier structure.
+ * @return None.
  **
  * =============================================================================== */
 
@@ -121,6 +122,10 @@ void *mscopier_read(void *param) {
 #ifdef DEBUG
   PRINT_DEBUGV("READ", "Read string: %s", copier->buff[copier->length]);
 #endif
+
+  // Free the allocated memory for the line
+  free(copier->buff[copier->length - 1]);
+  copier->buff[copier->length - 1] = NULL;
 
   // Signal that buffer is not empty and increment length
   copier->length++;
