@@ -123,10 +123,6 @@ void *mscopier_read(void *param) {
   PRINT_DEBUGV("READ", "Read string: %s", copier->buff[copier->length]);
 #endif
 
-  // Free the allocated memory for the line
-  free(copier->buff[copier->length - 1]);
-  copier->buff[copier->length - 1] = NULL;
-
   // Signal that buffer is not empty and increment length
   copier->length++;
   pthread_cond_signal(&copier->bufferNotEmpty);
@@ -166,6 +162,10 @@ void *mscopier_write(void *param) {
 #ifdef DEBUG
   PRINT_DEBUGV("WRITE", "Wrote string: %s", copier->buff[copier->length - 1]);
 #endif
+
+  // Free the allocated memory for the line
+  free(copier->buff[copier->length - 1]);
+  copier->buff[copier->length - 1] = NULL;
 
   // Signal that buffer is not full and decrement length
   copier->length--;
