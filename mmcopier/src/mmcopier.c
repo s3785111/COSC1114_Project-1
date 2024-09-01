@@ -9,6 +9,7 @@
 /* =============================================================================== */
 /**
  * @brief Initializes the mmcopier struct.
+ * @todo Move pathcat to mmcopier_parse with added struct input to function
  *
  * @param *copier  Pointer to the mmcopier structure to be initialized.
  * @param argc     Argument count from the command line.
@@ -37,7 +38,7 @@ int mmcopier_init(mmcopier *copier, int argc, char *argv[]) {
   // Read files from source directory and ensure it exists
   struct dirent **files;
   if (scandir(copier->srcDir, &files, NULL, alphasort) < n) {
-    printf("Path error: Insufficient files or directory %s does not exist\n", copier->srcDir);
+    fprintf(stderr, "Path error: Insufficient files or directory %s does not exist\n", copier->srcDir);
     return 1;
   }
 
@@ -64,15 +65,15 @@ int mmcopier_init(mmcopier *copier, int argc, char *argv[]) {
 
 int mmcopier_parse(int argc, char *argv[], int *n) {
   if (argc != ARGC) {
-    printf("Argument Error: Expected %d inputs, received %d.\n", ARGC, argc);
+    fprintf(stderr, "Argument Error: Expected %d inputs, received %d.\n", ARGC, argc);
     return 1;
   }
   if (sscanf(argv[1], "%d", n) != 1) {
-    printf("Arugment Error: Expected first input parameter to be integer type.\n");
+    fprintf(stderr, "Arugment Error: Expected first input parameter to be integer type.\n");
     return 1;
   }
   if (*n > SIZE_N || *n < 1) {
-    printf("Arugment Error: First parameter n must be greater than 1 and less than or equal to %d.\n", SIZE_N);
+    fprintf(stderr, "Arugment Error: First parameter n must be greater than 1 and less than or equal to %d.\n", SIZE_N);
     return 1;
   }
   return 0;
@@ -94,7 +95,6 @@ void *mmcopier_copy(void *param) {
   pathcat(src, copier.srcDir, copier.fileName);
   pathcat(dest, copier.destDir, copier.fileName);
 
-  // Open files from struct
   FILE *infile  = fopen(src, "r");
   FILE *outfile = fopen(dest, "w+");
 
@@ -127,6 +127,8 @@ int main(int argc, char *argv[]) {
     return ret;
 
   // Loop through files ignoring . and ..
+  // There's definitely more robust ways of ignoring the relative directories
+  // but this is good enough for this assignment I reckon.
   for (int i = 2; i < 2 + copier.n; i++) {
     pthread_t tid;
     pthread_attr_t attr;

@@ -3,7 +3,7 @@ override CFLAGS += -Wall -Wextra -std=c99
 LIBS = -lpthread
 
 BIN = bin
-SUBPROJECTS = mmcopier
+SUBPROJECTS = mmcopier mscopier
 
 .PHONY: all test clean
 
