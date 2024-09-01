@@ -12,6 +12,7 @@
 #include "pthread.h"
 #include "stdint.h"
 #include "stdio.h"
+#include "stdlib.h"
 #include "string.h"
 #include "unistd.h"
 
@@ -22,6 +23,7 @@
 typedef struct {
   struct dirent **files;
   int n;
+  int fileCount;
   char fileName[MAX_FILENAME];
   char srcDir[FILENAME_MAX];
   char destDir[FILENAME_MAX];

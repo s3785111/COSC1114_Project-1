@@ -37,8 +37,14 @@ int mmcopier_init(mmcopier *copier, int argc, char *argv[]) {
 
   // Read files from source directory and ensure it exists
   struct dirent **files;
-  if (scandir(copier->srcDir, &files, NULL, alphasort) < n) {
+  int fileCount = scandir(copier->srcDir, &files, NULL, alphasort);
+  if (fileCount < n) {
     fprintf(stderr, "Path error: Insufficient files or directory %s does not exist\n", copier->srcDir);
+    // Free the allocated memory for files
+    for (int i = 0; i < fileCount; i++) {
+      free(files[i]);
+    }
+    free(files);
     return 1;
   }
 
@@ -47,8 +53,9 @@ int mmcopier_init(mmcopier *copier, int argc, char *argv[]) {
   // ============================
 
   // Initialise struct and return
-  copier->n     = n;
-  copier->files = files;
+  copier->n         = n;
+  copier->fileCount = fileCount;
+  copier->files     = files;
   return 0;
 }
 
@@ -108,6 +115,10 @@ void *mmcopier_copy(void *param) {
     fputc(a, outfile);
   }
 
+  // Close the files to prevent leaks
+  fclose(infile);
+  fclose(outfile);
+
   pthread_exit(0);
 }
 
@@ -139,6 +150,12 @@ int main(int argc, char *argv[]) {
     pthread_create(&tid, &attr, mmcopier_copy, &copier); // Spawn thread for file copy and pass in copier
     pthread_join(tid, NULL);                             // Join main thread to child
   }
+
+  // Free allocated memory from scandir
+  for (int i = 0; i < copier.fileCount; i++) {
+    free(copier.files[i]);
+  }
+  free(copier.files);
 
   return 0;
 }
